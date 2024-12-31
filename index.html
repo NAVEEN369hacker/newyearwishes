@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy New Year!</title>
+  <title>Heart Click Page</title>
   <style>
     body {
       margin: 0;
@@ -16,6 +16,7 @@
       font-family: 'Arial', sans-serif;
       color: #fff;
       overflow: hidden;
+      flex-direction: column;
     }
 
     .animated-bg {
@@ -26,161 +27,44 @@
       left: 0;
       background: url('backgroundgreet.jpg') center/cover no-repeat;
       opacity: 0.7;
-      filter: blur(5px); /* Reduced blur */
+      filter: blur(5px);
       z-index: -2;
     }
 
-    .card {
-      text-align: center;
-      background: rgba(255, 192, 203, 0.8);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 30px rgba(255, 105, 180, 0.7);
-      transition: all 0.5s ease;
-      display: none;
-      opacity: 0;
-      width: 60%;
-      max-width: 700px;
-      height: auto;
+    .heart {
+      width: 100px;
+      height: 100px;
+      background: url('heartpng.png') center/cover no-repeat;
+      background-size: contain;
+      animation: beat 1s infinite;
+      cursor: pointer;
     }
 
-    .card p {
-      font-size: 1.2rem;
-      margin: 0;
-      line-height: 1.6;
+    @keyframes beat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .caption {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
       color: #fff;
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .highlight {
-      font-size: 12rem;  /* Doubled the font size */
-      font-weight: bold;
-      background: -webkit-linear-gradient(45deg, #FF69B4, #FF1493, #FF4500, #FFD700);
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 105, 180, 1), 0 0 50px rgba(255, 69, 0, 1);  /* Colorful glowing effect */
-      font-family: 'Dancing Script', cursive;  /* Beautiful cursive font */
-      text-align: center;
-      letter-spacing: 2px;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 1;
     }
   </style>
 </head>
 <body>
+
   <div class="animated-bg"></div>
+  
+  <div class="heart" onclick="window.location.href='change.html';"></div>
+  
+  <p class="caption">Click on the above heart</p>
 
-  <canvas class="falling-hearts"></canvas>
-
-  <div class="card" id="textCard">
-    <p id="textContent"></p>
-    <p id="finalMessage" class="highlight" style="display: none;"></p>
-  </div>
-
-  <script>
-    // Define girlfriend's name
-    const girlfriendName = "Sakshi"; // Replace with the desired name
-
-    const paragraphs = [
-      "This New Year, I want to thank you, my girl, for bringing hope back into my life. After so much pain and self-doubt, meeting you reminded me that life still holds beauty and possibilities.",
-      "Though my past shaped my decisions, my feelings for you are real, my sakhi. I’ve chosen a path of selflessness, offering my friendship without expecting anything in return. I care about you deeply.",
-      "I understand that love sometimes means letting go, my queen, and I don’t expect anything from you. My choice is one I made with my heart, inspired by those who dedicate themselves to others.",
-      "As this year begins, I wish you nothing but happiness and success, my cutie. I trust you’ll find love and fulfillment in everything you do, and I’ll support you no matter what path you take.",
-      "May this year bring you closer to your dreams, my dear. Thank you for being part of my life. I’ll always be here for you, cheering you on."
-    ];
-
-    const finalMessage = `Happy New Year, ${girlfriendName}!`;
-
-    let currentParagraph = 0;
-
-    function startFallingHearts() {
-      const canvas = document.querySelector('.falling-hearts');
-      const ctx = canvas.getContext('2d');
-      const heartImage = new Image();
-      heartImage.src = 'heartpng.png';
-
-      let hearts = [];
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      function drawHearts() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        hearts.forEach(heart => {
-          ctx.drawImage(heartImage, heart.x, heart.y, heart.size, heart.size);
-          heart.y += heart.speed;
-          if (heart.y > canvas.height) {
-            heart.y = -heart.size;
-            heart.x = Math.random() * canvas.width;
-          }
-        });
-      }
-
-      function createHeart() {
-        hearts.push({
-          x: Math.random() * canvas.width,
-          y: -30,
-          size: Math.random() * 30 + 20,
-          speed: Math.random() * 2 + 1
-        });
-      }
-
-      const interval = setInterval(createHeart, 100);
-
-      function animate() {
-        drawHearts();
-        requestAnimationFrame(animate);
-      }
-
-      animate();
-
-      // Stop hearts and show the first paragraph after 5 seconds
-      setTimeout(() => {
-        clearInterval(interval);
-        hearts = [];
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.style.display = 'none'; // Hide the canvas for clarity
-        displayNextParagraph(); // Start displaying text immediately
-      }, 5000);
-    }
-
-    function displayNextParagraph() {
-      const textCard = document.getElementById('textCard');
-      const textContent = document.getElementById('textContent');
-      const finalMessageEl = document.getElementById('finalMessage');
-
-      if (currentParagraph < paragraphs.length) {
-        textContent.innerHTML = paragraphs[currentParagraph];
-        textCard.style.display = 'block';
-        textCard.style.opacity = 1;
-
-        currentParagraph++;
-
-        // Schedule the next paragraph
-        setTimeout(() => {
-          textCard.style.opacity = 0;
-          setTimeout(() => {
-            displayNextParagraph();
-          }, 1000); // Wait for fade out before changing content
-        }, 7000); // Display each paragraph for 7 seconds
-      } else {
-        // Show the final message
-        textContent.style.display = 'none'; // Hide paragraphs
-        finalMessageEl.innerHTML = finalMessage;
-        finalMessageEl.style.display = 'block';
-        textCard.style.opacity = 1;
-      }
-    }
-
-    window.onload = () => {
-      startFallingHearts();
-    };
-  </script>
 </body>
 </html>
